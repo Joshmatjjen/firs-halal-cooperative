@@ -5,15 +5,14 @@
   "main": "index.js",
   "engines": {
     "node": "12.13.0",
-    "npm": "6.13.0",
-    "yarn": "1.22.4"
+    "npm": "6.13.0"
   },
   "scripts": {
-    "start": "node index.js",
-    "backend": "nodemon index.js",
-    "frontend": "yarn run start --prefix client",
-    "dev": "concurrently \"yarn run backend\"  \"yarn run start --prefix client\"",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false yarn install --prefix client && yarn run build --prefix client",
+    "start": "node server.js",
+    "backend": "nodemon server.js",
+    "frontend": "npm run start --prefix client",
+    "dev": "concurrently \"npm run backend\"  \"npm run start --prefix client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md|vue)\""
   },
@@ -21,14 +20,20 @@
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
+    "@babel/runtime": "^7.6.0",
     "axios": "^0.19.2",
+    "bcrypt": "^4.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "cheerio": "^1.0.0-rc.3",
+    "content-disposition": "^0.5.3",
     "cookie-parser": "^1.4.5",
+    "debug": "^4.1.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-mongo-sanitize": "^1.3.2",
     "express-rate-limit": "^5.0.0",
+    "express-validator": "^6.4.0",
     "helmet": "^3.21.2",
     "hpp": "^0.2.3",
     "http-proxy-middleware": "^0.20.0",
@@ -39,17 +44,33 @@
     "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.9.1",
     "ndb": "^1.1.5",
+    "node-cron": "^2.0.3",
     "nodemailer": "^6.4.2",
     "nodemailer-sendgrid-transport": "^0.2.0",
+    "react-ga": "^3.1.2",
     "react-linkify": "^1.0.0-alpha",
     "react-platform-js": "0.0.1",
+    "request": "^2.88.0",
+    "reselect": "^4.0.0",
+    "shift-parser": "^7.0.0",
     "slugify": "^1.3.6",
     "underscore": "^1.9.1",
+    "unirest": "^0.6.0",
     "validator": "^12.1.0",
-    "xss-clean": "^0.1.1"
+    "xss-clean": "^0.1.1",
+    "ytdl-core": "^2.1.5"
   },
   "devDependencies": {
+    "babel-plugin-istanbul": "^5.2.0",
     "concurrently": "^5.0.0",
+    "coveralls": "^3.0.6",
+    "jasmine": "^3.4.0",
+    "node-sass": "^4.14.1",
     "nodemon": "^2.0.1"
-  }
+  },
+  "browserslist": [
+    "last 1 version",
+    "> 1%",
+    "IE 10"
+  ]
 }
