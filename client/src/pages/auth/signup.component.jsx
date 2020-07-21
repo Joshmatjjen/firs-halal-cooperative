@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import LoadingBar from 'react-top-loading-bar';
 import SEO from '../../components/seo/seo.component';
 import { createStructuredSelector } from 'reselect';
 import { Link } from 'react-router-dom';
@@ -12,7 +11,8 @@ import {
 } from '../../redux/user/user.selector';
 import './signin-signup.styles.scss';
 import AuthSideNav from '../../components/navigation/authSideNav.component';
-import InputBox from '../../components/input/inputBox.component';
+import HelpCta from '../../components/cta/helpCta.component';
+import StepOne from './signup/step-one.component';
 const SignUp = ({ signUpStart, success, error, isLoading }) => {
   const [loadBar, setLoadBar] = useState(0);
   const [message, setMessage] = useState('');
@@ -72,112 +72,8 @@ const SignUp = ({ signUpStart, success, error, isLoading }) => {
         <div className="signin-signup card">
           <AuthSideNav />
           <div className="signin-signup__form">
-            <form onSubmit={handleSubmit} className="form">
-              <div className="form__group">
-                {/* UserName */}
-                <InputBox label="First Name" required="true" type="text" />
-                <InputBox label="LastName Name" required="true" type="text" />
-                <InputBox label="Email Name" required="true" type="email" />
-                <InputBox label="Last Name" required="true" type="number" />
-                <div className="form__input">
-                  <i
-                    className="fad fa-user"
-                    style={{ color: 'var(--color-primary)' }}
-                  ></i>
-                  <input
-                    type="text"
-                    className="form__input--box"
-                    placeholder="Username"
-                    id="userName"
-                    name="userName"
-                    value={userName}
-                    onChange={handleChange}
-                    required
-                  />
-                  <label
-                    htmlFor="userName"
-                    max="11"
-                    className="form__input--label"
-                  >
-                    UserName
-                  </label>
-                </div>
-
-                <div className="form__input">
-                  <i
-                    className="fad fa-envelope"
-                    style={{ color: 'var(--color-primary)' }}
-                  ></i>
-                  <input
-                    type="email"
-                    className="form__input--box"
-                    placeholder="Email"
-                    id="email"
-                    name="email"
-                    value={email}
-                    onChange={handleChange}
-                    required
-                  />
-                  <label htmlFor="email" className="form__input--label">
-                    Email
-                  </label>
-                </div>
-
-                <div className="form__input">
-                  <i
-                    className="fad fa-lock"
-                    style={{ color: 'var(--color-primary)' }}
-                  ></i>
-                  <input
-                    type="password"
-                    className="form__input--box"
-                    placeholder="Password"
-                    id="password"
-                    name="password"
-                    value={password}
-                    onChange={handleChange}
-                    required
-                  />
-                  <label htmlFor="password" className="form__input--label">
-                    Password
-                  </label>
-                </div>
-
-                <div className="form__input">
-                  <i
-                    className="fad fa-lock"
-                    style={{ color: 'var(--color-primary)' }}
-                  ></i>
-                  <input
-                    type="password"
-                    className="form__input--box"
-                    placeholder="confirm password"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={confirmPassword}
-                    onChange={handleChange}
-                    required
-                  />
-                  <label
-                    htmlFor="confirmPassword"
-                    className="form__input--label"
-                  >
-                    Confirm Password
-                  </label>
-                </div>
-              </div>
-              <div className="form__group">
-                <button type="submit" className=" submit_btn btn btn--green">
-                  {isLoading ? <div className="loader"></div> : <p>Submit</p>}
-                </button>
-                <p>
-                  Already a member?{' '}
-                  <Link to="/signin" className="auth-link">
-                    Sign In
-                  </Link>
-                </p>
-              </div>
-            </form>
+            <HelpCta />
+            <StepOne />
           </div>
         </div>
       </div>

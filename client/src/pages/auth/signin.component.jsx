@@ -14,7 +14,7 @@ const SignIn = ({ signInStart, error, isLoading }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [userCredentials, setCredentials] = useState({
     email: '',
-    password: '',
+    password: ''
   });
 
   const { email, password } = userCredentials;
@@ -30,7 +30,7 @@ const SignIn = ({ signInStart, error, isLoading }) => {
     }
     startLoader();
   }, [error, isLoading]);
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
     // const btn = event.currentTarget.querySelector('button');
     // const loaderbtn = btn.querySelector('div');
@@ -41,7 +41,7 @@ const SignIn = ({ signInStart, error, isLoading }) => {
     // downloadbtn.className = 'hide';
     setCredentials({
       email: '',
-      password: '',
+      password: ''
     });
     await signInStart(email, password);
     setTimeout(() => {
@@ -50,7 +50,7 @@ const SignIn = ({ signInStart, error, isLoading }) => {
     }, 15000);
   };
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     const { name, value } = event.target;
     setErrorMessage('');
     setCredentials({ ...userCredentials, [name]: value });
@@ -59,7 +59,7 @@ const SignIn = ({ signInStart, error, isLoading }) => {
   return (
     <div className="auth">
       <div className="auth-section">
-      <SEO title="Sign in" />
+        <SEO title="Sign in" />
         <LoadingBar
           progress={loadBar}
           height={3}
@@ -120,18 +120,12 @@ const SignIn = ({ signInStart, error, isLoading }) => {
                 </div>
               </div>
               <div className="form__group">
+                <button type="submit" className=" submit_btn btn--green">
+                  {isLoading ? <div className="loader"></div> : <p>Submit</p>}
+                </button>
                 <button type="submit" className=" submit_btn btn btn--green">
                   {isLoading ? <div className="loader"></div> : <p>Submit</p>}
                 </button>
-                <Link to="/forgot-password" className="auth-link">
-                  <p>Forgot your password?</p>
-                </Link>
-                <p>
-                  Don't have an account?{' '}
-                  <Link to="/signup" className="auth-link">
-                    Sign up
-                  </Link>
-                </p>
               </div>
             </form>
           </div>
@@ -144,10 +138,10 @@ const SignIn = ({ signInStart, error, isLoading }) => {
 
 const mapStateToProps = createStructuredSelector({
   error: selectError,
-  isLoading: selectIsLoading,
+  isLoading: selectIsLoading
 });
-const mapDispatchToProps = (dispatch) => ({
-  signInStart: (email, password) => dispatch(signInStart({ email, password })),
+const mapDispatchToProps = dispatch => ({
+  signInStart: (email, password) => dispatch(signInStart({ email, password }))
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SignIn));

@@ -1,7 +1,6 @@
 .input {
   &__box {
     flex-direction: column;
-    width: 50%;
     margin: 10px auto;
 
     p {
@@ -10,12 +9,12 @@
     }
 
     input {
-      font-size: 1.7rem;
+      font-size: 1rem;
       font-family: inherit;
       color: inherit;
       background-color: var(--color-bg);
       // background: linear-gradient(92deg, #038125 0%, #4dff07 48%, #d6da05 100%);
-      padding: 1.5rem 0 1.5rem 2rem;
+      padding: 1rem 0 1rem 2rem;
       border-bottom-right-radius: 0.5rem;
       border-bottom-left-radius: 0.5rem;
       border: 1px solid rgb(228, 228, 228);

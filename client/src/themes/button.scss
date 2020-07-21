@@ -1,18 +1,18 @@
 @import 'mixins.scss';
 
 .btn {
-  color: var(--color-text-1);
+  color: var(--color-primary);
+  background-color: transparent;
 
   &,
   &:link,
   &:visited {
     text-transform: uppercase !important;
     text-decoration: none !important;
-    padding: 1.5rem 4rem !important;
     display: inline-block !important;
-    border-radius: 10rem !important;
     transition: all 0.2s !important;
     position: relative !important;
+    font-size: 1.2rem;
     //Change for the <button> element
     border: none !important;
     cursor: pointer !important;
@@ -27,7 +27,7 @@
   }
 
   &--green {
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-light);
     color: var(--color-light);
     font-size: 1.5rem;
     font-weight: 500;
