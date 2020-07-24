@@ -1,0 +1,67 @@
+@import 'mixins.scss';
+
+.btn {
+  color: var(--color-text-1);
+
+  &,
+  &:link,
+  &:visited {
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    padding: 1.5rem 4rem !important;
+    display: inline-block !important;
+    border-radius: 10rem !important;
+    transition: all 0.2s !important;
+    position: relative !important;
+    //Change for the <button> element
+    border: none !important;
+    cursor: pointer !important;
+
+    @include respond(tabPort) {
+      padding: 1rem 2rem !important;
+    }
+
+    @include respond(phone) {
+      padding: 0.8rem 1.5rem !important;
+    }
+  }
+
+  &--green {
+    background-color: var(--color-primary);
+    color: var(--color-light);
+    font-size: 1.5rem;
+    font-weight: 500;
+
+    @include respond(tabPort) {
+      font-size: 1.3rem;
+      padding: 1rem 2rem;
+    }
+
+    @include respond(tabPort) {
+      font-size: 1.1rem;
+      padding: 0.8rem 1.5rem;
+    }
+
+    &::after {
+      background-color: var(--color-primary);
+    }
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+
+    // box-shadow: 0 1rem 2rem rgba($color-black, 0.2);
+
+    &::after {
+      transform: scaleX(1.4) scaleY(1.6);
+      opacity: 0;
+    }
+  }
+
+  &:active,
+  &:focus {
+    outline: none;
+    transform: translateY(-1px);
+    box-shadow: 0 0.5rem 1rem rgba(var(--color-dark), 0.2);
+  }
+}
