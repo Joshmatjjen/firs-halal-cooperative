@@ -14,6 +14,7 @@ const AppError = require("././utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 const userRouter = require("./routes/userRoutes");
 const viewRouter = require("./routes/viewRoutes");
+const emailTemplate = require("./utils/emailTemplate");
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(helmet());
 
 // Development logging
 if (process.env.NODE_ENV === "development") {
+  // console.log(emailTemplate("Joshua", "Ezinwa", "www.google.com"));
   app.use(morgan("dev"));
 }
 

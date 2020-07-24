@@ -5,6 +5,7 @@ const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const sendEmail = require("../utils/email");
+const emailTemplate = require("../utils/emailTemplate");
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -39,13 +40,30 @@ const createSendToken = (user, statusCode, message, res) => {
 };
 
 exports.signUp = catchAsync(async (req, res, next) => {
-  // try {
   const newUser = await User.create(req.body);
   const message = "Signup Was Successful";
   createSendToken(newUser, 201, message, res);
-  // } catch (err) {
-  //   console.log(err);
-  // }
+  console.log(
+    emailTemplate(
+      newUser.firstName,
+      newUser.lastName,
+      "https://www.google.com/"
+    )
+  );
+  try {
+    await sendEmail({
+      email: newUser.email,
+      subject: "Welcome to FIRS-HILAL Cooperative Society",
+      message,
+      html: emailTemplate(
+        newUser.firstName,
+        newUser.lastName,
+        "https://www.google.com/"
+      ),
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 exports.login = catchAsync(async (req, res, next) => {

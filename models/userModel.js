@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide your phone number"],
     unique: true,
-    validate: [validator.isNumeric, "Please provide a valid phoneNumber"],
+    // validate: [validator.isNumeric, "Please provide a valid phoneNumber"],
   },
   role: {
     type: String,
@@ -79,7 +79,7 @@ const userSchema = new mongoose.Schema({
   },
   maritalStatus: {
     type: String,
-    required: [true, "Please tell us your middle name"],
+    required: [true, "Please tell us your marital status"],
     trim: true,
     type: String,
     lowercase: true,
@@ -173,7 +173,7 @@ const userSchema = new mongoose.Schema({
       ],
     },
     phoneNumber: {
-      type: Number,
+      type: String,
       required: [true, "Please tell us your representative phone number"],
     },
   },
