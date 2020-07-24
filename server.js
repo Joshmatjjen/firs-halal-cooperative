@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const config = require("./config/keys");
 
 process.on("uncaughtException", (err) => {
   console.log("UNCAUGHT EXCEPTION! 🔥 Shutting down....");
@@ -11,14 +10,14 @@ process.on("uncaughtException", (err) => {
 dotenv.config({ path: "./config.env" });
 const app = require("./app");
 
-// const DB = process.env.DATABASE.replace(
-//   '<PASSWORD>',
-//   process.env.DATABASE_PASSWORD
-// );
+const DB = process.env.DATABASE.replace(
+  "<PASSWORD>",
+  process.env.DATABASE_PASSWORD
+);
 
 //NOTE // mongoose .connect(process.env.DATABASE_LOCAL, {
 mongoose
-  .connect(config.mongoURI, {
+  .connect(DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
