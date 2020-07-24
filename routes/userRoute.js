@@ -1,71 +1,48 @@
-import UserController from '../controllers/userController';
-import AuthMiddleware from '../middlewares/authMiddleware';
-import { 
-  signup,
-  signin,
-  tokenSignin,
-  checkEmail,
-  resetPassword,
-  changePassword,
-} from '../middlewares/validationMiddleware';
+const express = require("express");
+const userController = require("./../controllers/userController");
+const authController = require("./../controllers/authController");
+/** Using Destructuring */
 
-export default router => {
-  router.post('/auth/signup', signup, UserController.postSignup);
-  router.post('/auth/login', signin, UserController.postLogin);
-  router.post('/auth/token-login', tokenSignin, UserController.tokenLogin);
-  /**
-   * @param /auth/confrim-email?email_token=<email token>
-   */
-  router.get('/auth/confirm-email', UserController.confirmEmail);
-  router.get(
-    '/auth/resend-confirm-email',
-    AuthMiddleware.auth,
-    UserController.resendConfirmEmail,
-  );
-  router.post(
-    '/auth/forget-password',
-    checkEmail,
-    UserController.forgetPassword,
-  );
-  /**
-   * @param /auth/reset-password?email_token=<email token>
-   */
-  router.patch(
-    '/auth/reset-password',
-    resetPassword,
-    UserController.resetPassword,
-  );
-  router.patch(
-    '/auth/change-password',
-    AuthMiddleware.auth,
-    AuthMiddleware.emailConfrim,
-    changePassword,
-    UserController.changeOldPassword,
-  );
-  router.patch(
-    '/save/download',
-    AuthMiddleware.auth,
-    AuthMiddleware.emailConfrim,
-    UserController.saveDownload,
-  );
-  router.get(
-    '/get/downloads',
-    AuthMiddleware.auth,
-    UserController.getDownloads,
-  );
-  router.get(
-    '/get/subscription',
-    AuthMiddleware.auth,
-    UserController.getSubscription,
-  );
-  router.delete(
-    '/delete/downloads',
-    AuthMiddleware.auth,
-    UserController.deleteDownloads,
-  );
-  router.get(
-    '/download',
-    UserController.download,
-  );
-  return router;
-};
+// const {
+//   getAllUsers,
+//   createUser,
+//   getUser,
+//   updateUser,
+//   deleteUser
+// } = require('./../controllers/userController');
+
+const userRouter = express.Router();
+
+userRouter.post("/signup", authController.signUp);
+userRouter.post("/login", authController.login);
+userRouter.get("/logout", authController.logout);
+
+// Auth MIDDLEWARE 👇
+userRouter.use(authController.protect);
+// After this 👆  MIDDLEWARE  👇 Users must be authenticated. Route will be protected
+
+userRouter.post("/forgotPassword", authController.forgotPassword);
+userRouter.patch("/resetPassword/:token", authController.resetPassword);
+
+userRouter.patch("/updateMyPassword", authController.updatePassword);
+
+userRouter.get("/me", userController.getMe, userController.getUser);
+userRouter.patch("/updateMe", userController.updateMe);
+userRouter.delete("/deleteMe", userController.deleteMe);
+
+// RestricTo Admin Only MIDDLEWARE 👇
+userRouter.use(authController.restrictTo("admin"));
+// After this 👆  MIDDLEWARE  👇 Only Admin can go to route
+
+userRouter
+  .route("/")
+  .get(userController.getAllUsers)
+  .post(userController.createUser);
+
+userRouter
+  .route("/:id")
+  .get(userController.getUser)
+  .patch(userController.updateUser)
+  .delete(userController.deleteUser);
+
+module.exports = userRouter;
