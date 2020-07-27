@@ -6,6 +6,7 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const sendEmail = require("../utils/email");
 const emailTemplate = require("../utils/emailTemplate");
+const { cloudinary } = require("../utils/imageUpload");
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -43,13 +44,6 @@ exports.signUp = catchAsync(async (req, res, next) => {
   const newUser = await User.create(req.body);
   const message = "Signup Was Successful";
   createSendToken(newUser, 201, message, res);
-  console.log(
-    emailTemplate(
-      newUser.firstName,
-      newUser.lastName,
-      "https://www.google.com/"
-    )
-  );
   try {
     await sendEmail({
       email: newUser.email,

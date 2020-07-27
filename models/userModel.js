@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const { cloudinary } = require("../utils/imageUpload");
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -123,6 +124,7 @@ const userSchema = new mongoose.Schema({
   confirmed: {
     type: String,
     enum: ["yes", "no"],
+    lowercase: true,
     required: [true, "Please tell us if you are confirmed"],
   },
   employmentDate: {
@@ -232,6 +234,21 @@ userSchema.pre("save", function (next) {
   if (!this.isModified("password") || this.isNew) return next();
 
   this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
+userSchema.pre("save", async function (next) {
+  // Only run this function if photo was actually modified
+  let result;
+  try {
+    !this.isModified("photo") ? next() : null;
+    result = await cloudinary.uploader.upload(this.photo, {
+      upload_preset: "firs-halal",
+    });
+    result ? (this.photo = result.public_id) : null;
+  } catch (err) {
+    console.error(err);
+  }
   next();
 });
 
