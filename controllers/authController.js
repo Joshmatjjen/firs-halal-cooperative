@@ -43,7 +43,6 @@ const createSendToken = (user, statusCode, message, res) => {
 exports.signUp = catchAsync(async (req, res, next) => {
   let result;
   try {
-    !this.isModified("photo") ? next() : null;
     result = await cloudinary.uploader.upload(req.body.photo, {
       upload_preset: "firs-halal",
     });
