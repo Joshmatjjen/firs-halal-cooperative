@@ -6,7 +6,7 @@ const handleCastErrorDB = (err) => {
 };
 
 const handleDuplicateFieldsDB = (err) => {
-  console.log(err);
+  console.log("This is the eror", err, "And the end of the line");
   // const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0]; // get first element of the regex match form mongoerror response
   // console.log(value);
   const message = `Duplicate field value: ${value}, Please use another value`;
