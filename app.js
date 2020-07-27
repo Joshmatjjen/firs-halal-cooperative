@@ -14,9 +14,13 @@ const AppError = require("././utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 const userRouter = require("./routes/userRoutes");
 const viewRouter = require("./routes/viewRoutes");
+const emailTemplate = require("./utils/emailTemplate");
+const { cloudinary } = require("./utils/imageUpload");
+const { response } = require("express");
+const cors = require("cors");
 
 const app = express();
-
+app.use(cors());
 // INTITIATING PUG TEMPLATE ENGINE
 // app.set('view engine', 'pug');
 // app.set('views', path.join(__dirname, 'views'));
@@ -25,10 +29,24 @@ const app = express();
 // app.use(express.static(path.join(__dirname, 'public')));
 
 // Set security HTTP headers
-app.use(helmet());
 
+app.use(helmet());
+async function upload() {
+  // app.post("/api/upload", (req, res) => {
+  // try {
+  const fileStr = "";
+
+  // cloudinary.image.
+  // console.log(uploadResponse);
+  // } catch (e) {
+  //   console.error(e);
+  // }
+  // });
+}
 // Development logging
 if (process.env.NODE_ENV === "development") {
+  // console.log(emailTemplate("Joshua", "Ezinwa", "www.google.com"));
+  upload();
   app.use(morgan("dev"));
 }
 
@@ -41,9 +59,9 @@ const limiter = rateLimit({
 app.use("/api", limiter);
 
 // Body parser, reading data from body into req.body
-app.use(express.json({ limit: "10kb" }));
+app.use(express.json({ limit: "50mb" }));
 // Getting data from form
-app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection

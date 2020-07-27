@@ -1,6 +1,6 @@
-const express = require('express');
-const userController = require('./../controllers/userController');
-const authController = require('./../controllers/authController');
+const express = require("express");
+const userController = require("./../controllers/userController");
+const authController = require("./../controllers/authController");
 /** Using Destructuring */
 
 // const {
@@ -13,34 +13,34 @@ const authController = require('./../controllers/authController');
 
 const userRouter = express.Router();
 
-userRouter.post('/signup', authController.signUp);
-userRouter.post('/login', authController.login);
-userRouter.get('/logout', authController.logout);
+userRouter.post("/signup", authController.signUp);
+userRouter.post("/login", authController.login);
+userRouter.get("/logout", authController.logout);
 
 // Auth MIDDLEWARE 👇
-userRouter.use(authController.protect);
+// userRouter.use(authController.protect);
 // After this 👆  MIDDLEWARE  👇 Users must be authenticated. Route will be protected
 
-userRouter.post('/forgotPassword', authController.forgotPassword);
-userRouter.patch('/resetPassword/:token', authController.resetPassword);
+userRouter.post("/forgotPassword", authController.forgotPassword);
+userRouter.patch("/resetPassword/:token", authController.resetPassword);
 
-userRouter.patch('/updateMyPassword', authController.updatePassword);
+userRouter.patch("/updateMyPassword", authController.updatePassword);
 
-userRouter.get('/me', userController.getMe, userController.getUser);
-userRouter.patch('/updateMe', userController.updateMe);
-userRouter.delete('/deleteMe', userController.deleteMe);
+userRouter.get("/me", userController.getMe, userController.getUser);
+userRouter.patch("/updateMe", userController.updateMe);
+userRouter.delete("/deleteMe", userController.deleteMe);
 
 // RestricTo Admin Only MIDDLEWARE 👇
-userRouter.use(authController.restrictTo('admin'));
+userRouter.use(authController.restrictTo("admin"));
 // After this 👆  MIDDLEWARE  👇 Only Admin can go to route
 
 userRouter
-  .route('/')
+  .route("/")
   .get(userController.getAllUsers)
   .post(userController.createUser);
 
 userRouter
-  .route('/:id')
+  .route("/:id")
   .get(userController.getUser)
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
