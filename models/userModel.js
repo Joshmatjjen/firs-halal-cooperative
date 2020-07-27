@@ -237,20 +237,10 @@ userSchema.pre("save", function (next) {
   next();
 });
 
-userSchema.pre("save", async function (next) {
-  // Only run this function if photo was actually modified
-  let result;
-  try {
-    !this.isModified("photo") ? next() : null;
-    result = await cloudinary.uploader.upload(this.photo, {
-      upload_preset: "firs-halal",
-    });
-    result ? (this.photo = result.public_id) : null;
-  } catch (err) {
-    console.error(err);
-  }
-  next();
-});
+// userSchema.pre("save", async function (next) {
+//   // Only run this function if photo was actually modified
+
+// });
 
 // Regex for checking all request using find (i.e: findOne, findAndUpdate.. etc);
 userSchema.pre(/^find/, function (next) {

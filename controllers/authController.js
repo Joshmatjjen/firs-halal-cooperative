@@ -41,6 +41,17 @@ const createSendToken = (user, statusCode, message, res) => {
 };
 
 exports.signUp = catchAsync(async (req, res, next) => {
+  let result;
+  try {
+    !this.isModified("photo") ? next() : null;
+    result = await cloudinary.uploader.upload(req.body.photo, {
+      upload_preset: "firs-halal",
+    });
+    result ? (req.body.photo = result.public_id) : null;
+  } catch (err) {
+    console.error(err);
+  }
+  // next();
   const newUser = await User.create(req.body);
   const message = "Signup Was Successful";
   createSendToken(newUser, 201, message, res);
