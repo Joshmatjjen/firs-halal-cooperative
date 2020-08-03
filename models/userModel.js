@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
   },
   middleName: {
     type: String,
-    required: [true, "Please tell us your middle name"],
+    // required: [true, "Please tell us your middle name"],
     trim: true,
     lowercase: true,
     maxlength: [
@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema({
       "user middle name must have less or equals t0 20 characters",
     ],
     minlength: [3, "user middle name must have more or equals to 3 characters"],
+    default: null,
   },
   lastName: {
     type: String,
