@@ -232,6 +232,16 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.pre("save", function (next) {
+  if (!this.isModified("contribution")) return next();
+  this.contribution.savingsAccount =
+    this.contribution.totalMC * (this.contribution.savingsAccount / 100);
+  this.contribution.investmentAccount =
+    this.contribution.totalMC * (this.contribution.investmentAccount / 100);
+
+  next();
+});
+
+userSchema.pre("save", function (next) {
   if (!this.isModified("password") || this.isNew) return next();
 
   this.passwordChangedAt = Date.now() - 1000;
