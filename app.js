@@ -18,6 +18,7 @@ const emailTemplate = require("./utils/emailTemplate");
 const { cloudinary } = require("./utils/imageUpload");
 const { response } = require("express");
 const cors = require("cors");
+const loanRouter = require("./routes/loanRoutes");
 
 const app = express();
 app.use(cors());
@@ -71,18 +72,18 @@ app.use(mongoSanitize());
 app.use(xss());
 
 // Prevent parameter pollution
-app.use(
-  hpp({
-    whitelist: [
-      "duration",
-      "ratingsAverage",
-      "ratingsQuantity",
-      "maxGroupSize",
-      "difficulty",
-      "price",
-    ],
-  })
-);
+// app.use(
+//   hpp({
+//     whitelist: [
+//       "duration",
+//       "ratingsAverage",
+//       "ratingsQuantity",
+//       "maxGroupSize",
+//       "difficulty",
+//       "price",
+//     ],
+//   })
+// );
 
 // Serving static files
 // app.use(express.static(`${__dirname}/public`));
@@ -103,6 +104,7 @@ app.use((req, res, next) => {
 
 app.use("/", viewRouter);
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/loans", loanRouter);
 
 // This MIDDLEWARE Should always be at the last part of route.. //Below all route or middleware
 app.all("*", (req, res, next) => {
