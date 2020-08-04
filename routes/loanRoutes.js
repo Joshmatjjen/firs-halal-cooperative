@@ -27,4 +27,13 @@ loanRouter
     loanController.deleteLoan
   );
 
+loanRouter
+  .route("/me/:userId")
+  .get(loanController.getMyLoan)
+  .patch(authController.restrictTo("user", "admin"), loanController.updateLoan)
+  .delete(
+    authController.restrictTo("user", "admin"),
+    loanController.deleteLoan
+  );
+
 module.exports = loanRouter;

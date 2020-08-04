@@ -36,6 +36,8 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
 
 exports.getLoan = factory.getOne(Loan);
 
+exports.getMyLoan = factory.getMine(Loan);
+
 exports.createLoan = factory.createOne(Loan);
 // exports.createReview = catchAsync(async (req, res, next) => {
 //   // Allow nested route
