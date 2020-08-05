@@ -217,6 +217,26 @@ const userSchema = new mongoose.Schema({
       type: String,
     },
   },
+  activeLoan: {
+    _id: {
+      type: String,
+    },
+    type: {
+      type: String,
+    },
+    amount: {
+      type: Number,
+    },
+    duration: {
+      type: String,
+    },
+    activatedDate: {
+      type: Date,
+    },
+    expiringDate: {
+      type: Date,
+    },
+  },
 });
 
 userSchema.pre("save", async function (next) {

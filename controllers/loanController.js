@@ -34,6 +34,10 @@ exports.checkStatus = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.approveLoan = factory.approveOne(Loan);
+
+exports.disapproveLoan = factory.disapproveOne(Loan);
+
 exports.getLoan = factory.getOne(Loan);
 
 exports.getMyLoan = factory.getMine(Loan);

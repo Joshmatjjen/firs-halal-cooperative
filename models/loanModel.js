@@ -6,6 +6,7 @@ const loanSchema = new mongoose.Schema(
   {
     type: {
       type: String,
+      lowercase: true,
       enum: ["conventional", "emergency"],
       required: [true, "Loan type can not be empty!"],
     },

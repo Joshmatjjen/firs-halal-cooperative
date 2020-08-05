@@ -9,7 +9,7 @@ loanRouter.use(authController.protect);
 // After this 👆  MIDDLEWARE  👇 Users must be authenticated. Route will be protected
 
 loanRouter.route("/").get(loanController.getAllLoans).post(
-  authController.restrictTo("user"),
+  authController.restrictTo("user", "admin"),
   // If using factory function
   //  START
   loanController.setUserIds,
@@ -35,5 +35,13 @@ loanRouter
     authController.restrictTo("user", "admin"),
     loanController.deleteLoan
   );
+
+loanRouter
+  .route("/approve/:id")
+  .patch(authController.restrictTo("admin"), loanController.approveLoan);
+
+loanRouter
+  .route("/disapprove/:id")
+  .patch(authController.restrictTo("admin"), loanController.disapproveLoan);
 
 module.exports = loanRouter;
