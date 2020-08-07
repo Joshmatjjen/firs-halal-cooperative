@@ -2,6 +2,7 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
+const { cloudinary } = require('../utils/imageUpload');
 
 exports.getAllUsers = factory.getAll(User);
 // exports.getAllUsers = catchAsync(async (req, res, next) => {
@@ -88,6 +89,12 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'photo'
   );
   console.log(filteredBody);
+  if (filteredBody && filteredBody.photo) {
+    let result = await cloudinary.uploader.upload(filteredBody.photo, {
+      upload_preset: 'firs-halal',
+    });
+    result ? (filteredBody.photo = result.public_id) : null;
+  }
   // 3) Update user Document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
