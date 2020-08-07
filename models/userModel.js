@@ -269,7 +269,7 @@ userSchema.pre('save', function (next) {
   next();
 });
 
-userSchema.pre('save', async function (next) {
+userSchema.pre('save' || /^find/, async function (next) {
   // Only run this function if photo was actually modified
   let result;
   try {
