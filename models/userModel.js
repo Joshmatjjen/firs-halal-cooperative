@@ -1,20 +1,20 @@
-const crypto = require("crypto");
-const mongoose = require("mongoose");
-const validator = require("validator");
-const bcrypt = require("bcryptjs");
-const { cloudinary } = require("../utils/imageUpload");
+const crypto = require('crypto');
+const mongoose = require('mongoose');
+const validator = require('validator');
+const bcrypt = require('bcryptjs');
+const { cloudinary } = require('../utils/imageUpload');
 
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: [true, "Please tell us your first name"],
+    required: [true, 'Please tell us your first name'],
     trim: true,
     lowercase: true,
     maxlength: [
       20,
-      "user first name must have less or equals t0 20 characters",
+      'user first name must have less or equals t0 20 characters',
     ],
-    minlength: [3, "user first name must have more or equals to 3 characters"],
+    minlength: [3, 'user first name must have more or equals to 3 characters'],
   },
   middleName: {
     type: String,
@@ -23,52 +23,52 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     maxlength: [
       20,
-      "user middle name must have less or equals t0 20 characters",
+      'user middle name must have less or equals t0 20 characters',
     ],
-    minlength: [3, "user middle name must have more or equals to 3 characters"],
+    minlength: [3, 'user middle name must have more or equals to 3 characters'],
     default: null,
   },
   lastName: {
     type: String,
-    required: [true, "Please tell us your last name"],
+    required: [true, 'Please tell us your last name'],
     trim: true,
     lowercase: true,
-    maxlength: [20, "user last name must have less or equals t0 20 characters"],
-    minlength: [3, "user last name must have more or equals to 3 characters"],
+    maxlength: [20, 'user last name must have less or equals t0 20 characters'],
+    minlength: [3, 'user last name must have more or equals to 3 characters'],
   },
   email: {
     type: String,
-    required: [true, "Please provide your email"],
+    required: [true, 'Please provide your email'],
     unique: true,
     lowercase: true,
-    validate: [validator.isEmail, "Please provide a valid email"],
+    validate: [validator.isEmail, 'Please provide a valid email'],
   },
   phoneNumber: {
     type: String,
-    required: [true, "Please provide your phone number"],
+    required: [true, 'Please provide your phone number'],
     unique: true,
     // validate: [validator.isNumeric, "Please provide a valid phoneNumber"],
   },
   role: {
     type: String,
-    enum: ["user", "guide", "lead-guide", "admin"],
-    default: "user",
+    enum: ['user', 'guide', 'lead-guide', 'admin'],
+    default: 'user',
   },
   password: {
     type: String,
-    required: [true, "Please provide a password"],
+    required: [true, 'Please provide a password'],
     minlength: 8,
     select: false,
   },
   passwordConfirm: {
     type: String,
-    required: [true, "Please confirm your password"],
+    required: [true, 'Please confirm your password'],
     validate: {
       // This only works on CREATE and SAVE!!!
       validator: function (el) {
         return el === this.password;
       },
-      message: "Passwords are not the same!",
+      message: 'Passwords are not the same!',
     },
   },
   passwordChangedAt: Date,
@@ -81,117 +81,118 @@ const userSchema = new mongoose.Schema({
   },
   maritalStatus: {
     type: String,
-    required: [true, "Please tell us your marital status"],
+    required: [true, 'Please tell us your marital status'],
     trim: true,
     type: String,
     lowercase: true,
-    enum: ["single", "married", "others"],
-    default: "others",
+    enum: ['single', 'married', 'others'],
+    default: 'others',
   },
   dob: {
     type: Date,
-    required: [true, "Please tell us your date of birth"],
+    required: [true, 'Please tell us your date of birth'],
   },
   soo: {
     type: String,
-    required: [true, "Please tell us your state of origin"],
+    lowercase: true,
+    required: [true, 'Please tell us your state of origin'],
   },
   residentAddress: {
     type: String,
   },
   permanentAddress: {
     type: String,
-    required: [true, "Please tell us your permanent address"],
+    required: [true, 'Please tell us your permanent address'],
   },
   irNo: {
     type: Number,
-    required: [true, "Please tell us your IR Number"],
+    required: [true, 'Please tell us your IR Number'],
   },
   photo: {
     type: String,
-    required: [true, "Add your personal photo"],
+    required: [true, 'Add your personal photo'],
   },
   deploymentAddress: {
     type: String,
-    required: [true, "Please tell us your deployment address"],
+    required: [true, 'Please tell us your deployment address'],
   },
   officeAddress: {
     type: String,
   },
   salaryGrade: {
     type: String,
-    required: [true, "Please tell us your deployment address"],
+    required: [true, 'Please tell us your deployment address'],
   },
   confirmed: {
     type: String,
-    enum: ["yes", "no"],
+    enum: ['yes', 'no'],
     lowercase: true,
-    required: [true, "Please tell us if you are confirmed"],
+    required: [true, 'Please tell us if you are confirmed'],
   },
   employmentDate: {
     type: Date,
-    required: [true, "Please tell us date of your employment"],
+    required: [true, 'Please tell us date of your employment'],
   },
   repDetails: {
     firstName: {
       type: String,
-      required: [true, "Please tell us your representative first name"],
+      required: [true, 'Please tell us your representative first name'],
       trim: true,
       lowercase: true,
       maxlength: [
         20,
-        "Representative first name must have less or equals to 20 characters",
+        'Representative first name must have less or equals to 20 characters',
       ],
       minlength: [
         3,
-        "Representative first name must have more or equals to 3 characters",
+        'Representative first name must have more or equals to 3 characters',
       ],
     },
     lastName: {
       type: String,
-      required: [true, "Please tell us your representative last name"],
+      required: [true, 'Please tell us your representative last name'],
       trim: true,
       lowercase: true,
       maxlength: [
         20,
-        "Representative first name must have less or equals t0 20 characters",
+        'Representative first name must have less or equals t0 20 characters',
       ],
       minlength: [
         3,
-        "Representative last name must have more or equals to 3 characters",
+        'Representative last name must have more or equals to 3 characters',
       ],
     },
     relationship: {
       type: String,
       required: [
         true,
-        "Please tell us the between you and your representative",
+        'Please tell us the between you and your representative',
       ],
     },
     address: {
       type: String,
       required: [
         true,
-        "Please tell us your representative address (Home or Office)",
+        'Please tell us your representative address (Home or Office)',
       ],
     },
     phoneNumber: {
       type: String,
-      required: [true, "Please tell us your representative phone number"],
+      required: [true, 'Please tell us your representative phone number'],
     },
   },
   contribution: {
     totalMC: {
       type: Number,
-      required: [true, "Please tell us your total monthly contribution"],
+      required: [true, 'Please tell us your total monthly contribution'],
     },
     investmentAccount: {
       type: Number,
-      required: [true, "Please tell us your investment account"],
+      required: [true, 'Please tell us your investment account'],
     },
     savingsAccount: {
       type: Number,
-      required: [true, "Please tell us your savings account"],
+      required: [true, 'Please tell us your savings account'],
     },
     targetAccount: {
       type: Number,
@@ -203,15 +204,15 @@ const userSchema = new mongoose.Schema({
   bankDetails: {
     bankName: {
       type: String,
-      required: [true, "Please tell us your bank name"],
+      required: [true, 'Please tell us your bank name'],
     },
     accountName: {
       type: String,
-      required: [true, "Please tell us your bank account number"],
+      required: [true, 'Please tell us your bank account number'],
     },
     accountNumber: {
       type: Number,
-      required: [true, "Please tell us your bank account number"],
+      required: [true, 'Please tell us your bank account number'],
     },
     sortCode: {
       type: String,
@@ -239,9 +240,9 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.pre("save", async function (next) {
+userSchema.pre('save', async function (next) {
   // Only run this function if password was actually modified
-  if (!this.isModified("password")) return next();
+  if (!this.isModified('password')) return next();
 
   // Hash the password with cost of 12
   this.password = await bcrypt.hash(this.password, 12);
@@ -251,8 +252,8 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.pre("save", function (next) {
-  if (!this.isModified("contribution")) return next();
+userSchema.pre('save', function (next) {
+  if (!this.isModified('contribution')) return next();
   this.contribution.savingsAccount =
     this.contribution.totalMC * (this.contribution.savingsAccount / 100);
   this.contribution.investmentAccount =
@@ -261,20 +262,20 @@ userSchema.pre("save", function (next) {
   next();
 });
 
-userSchema.pre("save", function (next) {
-  if (!this.isModified("password") || this.isNew) return next();
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
 
   this.passwordChangedAt = Date.now() - 1000;
   next();
 });
 
-userSchema.pre("save", async function (next) {
+userSchema.pre('save', async function (next) {
   // Only run this function if photo was actually modified
   let result;
   try {
-    !this.isModified("photo") ? next() : null;
+    !this.isModified('photo') ? next() : null;
     result = await cloudinary.uploader.upload(this.photo, {
-      upload_preset: "firs-halal",
+      upload_preset: 'firs-halal',
     });
     result ? (this.photo = result.public_id) : null;
   } catch (err) {
@@ -311,12 +312,12 @@ userSchema.methods.changesPasswordAfter = function (JWTTimestamp) {
 };
 
 userSchema.methods.createPasswordResetToken = function () {
-  const resetToken = crypto.randomBytes(32).toString("hex");
+  const resetToken = crypto.randomBytes(32).toString('hex');
 
   this.passwordResetToken = crypto
-    .createHash("sha256")
+    .createHash('sha256')
     .update(resetToken)
-    .digest("hex");
+    .digest('hex');
 
   console.log({ resetToken }, this.passwordResetToken);
 
@@ -326,6 +327,6 @@ userSchema.methods.createPasswordResetToken = function () {
   return resetToken;
 };
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;
