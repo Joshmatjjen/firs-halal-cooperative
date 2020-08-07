@@ -274,6 +274,7 @@ userSchema.pre('save', async function (next) {
   let result;
   try {
     !this.isModified('photo') ? next() : null;
+    console.log('working on photo');
     result = await cloudinary.uploader.upload(this.photo, {
       upload_preset: 'firs-halal',
     });
