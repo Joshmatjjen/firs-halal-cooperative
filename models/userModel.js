@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { cloudinary } = require('../utils/imageUpload');
+const AppError = require('../utils/appError');
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -127,7 +128,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['yes', 'no'],
     lowercase: true,
-    required: [true, 'Please tell us if you are confirmed'],
+    default: 'no',
+    // required: [true, 'Please tell us if you are confirmed'],
   },
   employmentDate: {
     type: Date,
