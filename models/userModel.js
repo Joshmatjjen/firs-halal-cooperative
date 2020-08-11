@@ -52,8 +52,26 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'guide', 'lead-guide', 'admin'],
+    enum: ['user', 'admin', 'executive', 'super-admin'],
     default: 'user',
+  },
+  executive: {
+    isLCS: {
+      type: Boolean,
+      default: false,
+    },
+    isLCC: {
+      type: Boolean,
+      default: false,
+    },
+    isAuditor: {
+      type: Boolean,
+      default: false,
+    },
+    isPresident: {
+      type: Boolean,
+      default: false,
+    },
   },
   password: {
     type: String,
@@ -82,7 +100,7 @@ const userSchema = new mongoose.Schema({
   },
   maritalStatus: {
     type: String,
-    required: [true, 'Please tell us your marital status'],
+    required: [this.role === 'user', 'Please tell us your marital status'],
     trim: true,
     type: String,
     lowercase: true,
@@ -91,23 +109,26 @@ const userSchema = new mongoose.Schema({
   },
   dob: {
     type: Date,
-    required: [true, 'Please tell us your date of birth'],
+    required: [this.role === 'user', 'Please tell us your date of birth'],
   },
   soo: {
     type: String,
     lowercase: true,
-    required: [true, 'Please tell us your state of origin'],
+    // required: [
+    //   this.role === 'user' ? true : false,
+    //   'Please tell us your state of origin',
+    // ],
   },
   residentAddress: {
     type: String,
   },
   permanentAddress: {
     type: String,
-    required: [true, 'Please tell us your permanent address'],
+    required: [this.role === 'user', 'Please tell us your permanent address'],
   },
   irNo: {
     type: Number,
-    required: [true, 'Please tell us your IR Number'],
+    required: [this.role === 'user', 'Please tell us your IR Number'],
   },
   photo: {
     type: String,
@@ -115,14 +136,14 @@ const userSchema = new mongoose.Schema({
   },
   deploymentAddress: {
     type: String,
-    required: [true, 'Please tell us your deployment address'],
+    required: [this.role === 'user', 'Please tell us your deployment address'],
   },
   officeAddress: {
     type: String,
   },
   salaryGrade: {
     type: String,
-    required: [true, 'Please tell us your deployment address'],
+    required: [this.role === 'user', 'Please tell us your deployment address'],
   },
   confirmed: {
     type: String,
@@ -270,6 +291,10 @@ userSchema.pre('save', function (next) {
   this.passwordChangedAt = Date.now() - 1000;
   next();
 });
+// userSchema.pre(/^find/, async function (next, res) {
+//   console.log('restrestic');
+//   next();
+// });
 
 userSchema.pre('save' || /^find/, async function (next) {
   // Only run this function if photo was actually modified

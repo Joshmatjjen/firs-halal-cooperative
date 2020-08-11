@@ -70,6 +70,8 @@ exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
     // EXECUTE QUERY
     // To allow for nested GET reviews on tour (hack)
+    const docCount = await Model.countDocuments({ role: 'user' }).exec();
+    console.log(docCount);
     let filter = {};
     if (req.query.user) filter = { user: req.query.user };
     const features = new APIFeatures(Model.find(filter), req.query)
@@ -120,14 +122,67 @@ exports.getMine = (Model) =>
 
 exports.approveOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndUpdate(
-      req.params.id,
-      { status: 'approved', seenAt: Date.now() },
-      {
+    let update, doc;
+    switch (req.body.executiveType) {
+      case 'LCS':
+        update = {
+          approval: {
+            onLCS: {
+              user: req.body.userId,
+              isApproved: req.body.approve,
+              comment: req.body.comment,
+              actionDate: Date.now(),
+            },
+          },
+        };
+        break;
+      case 'LCC':
+        update = {
+          approval: {
+            onLCC: {
+              user: req.body.userId,
+              isApproved: req.body.approve,
+              comment: req.body.comment,
+              actionDate: Date.now(),
+            },
+          },
+        };
+        break;
+      case 'Auditor':
+        update = {
+          approval: {
+            onAuditor: {
+              user: req.body.userId,
+              isApproved: req.body.approve,
+              comment: req.body.comment,
+              actionDate: Date.now(),
+            },
+          },
+        };
+        break;
+      case 'President':
+        update = {
+          approval: {
+            onPresident: {
+              user: req.body.userId,
+              isApproved: req.body.approve,
+              comment: req.body.comment,
+              actionDate: Date.now(),
+            },
+          },
+          status: 'approved',
+          seenAt: Date.now(),
+        };
+        break;
+      default:
+        break;
+    }
+    if (update) {
+      doc = await Model.findByIdAndUpdate(req.params.id, update, {
         new: true,
         runValidators: true,
-      }
-    );
+      });
+    }
 
     if (!doc) {
       return next(new AppError('No document found with that ID', 404));

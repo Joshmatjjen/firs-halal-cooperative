@@ -1,7 +1,7 @@
-const Loan = require("../models/loanModel");
-const User = require("../models/userModel");
-const catchAsync = require("../utils/catchAsync");
-const factory = require("./handlerFactory");
+const Loan = require('../models/loanModel');
+const User = require('../models/userModel');
+const catchAsync = require('../utils/catchAsync');
+const factory = require('./handlerFactory');
 
 exports.getAllLoans = factory.getAll(Loan);
 // exports.getAllReviews = catchAsync(async (req, res, next) => {
@@ -28,7 +28,7 @@ exports.setUserIds = (req, res, next) => {
 
 exports.checkStatus = catchAsync(async (req, res, next) => {
   if (req.body.status) {
-    req.body.status = "pending";
+    req.body.status = 'pending';
     next();
   }
   next();
