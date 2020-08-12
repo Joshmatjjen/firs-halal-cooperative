@@ -42,13 +42,19 @@ const createSendToken = (user, statusCode, message, res) => {
 };
 
 exports.signUp = catchAsync(async (req, res, next) => {
+  // let role = req.body.role;
+  // if (role === 'super-admin' || role === 'executive') {
+  //   return next(
+  //     new AppError('You have no permission to signup with this role', 400)
+  //   );
+  // }
   const newUser = await User.create(req.body);
   const message = 'Signup Was Successful';
   createSendToken(newUser, 201, message, res);
   try {
     await sendEmail({
       email: newUser.email,
-      subject: 'Welcome to FIRS-HILAL Cooperative Society',
+      subject: 'Welcome to FIRS-HALAL Cooperative Society',
       message,
       html: emailTemplate(
         newUser.firstName,
@@ -62,31 +68,31 @@ exports.signUp = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  // try {
-  //   const newStat = await Stat.create({});
-  //   console.log(newStat);
-  //   next();
-  // } catch (error) {
-  //   console.log(error);
-  //   next();
+  try {
+    const newStat = await Stat.create({});
+    console.log(newStat);
+    next();
+  } catch (error) {
+    console.log(error);
+    next();
+  }
+  // const { email, password } = req.body;
+
+  // // 1) Check if email and password exist
+  // if (!email || !password) {
+  //   return next(new AppError('Please provide email and password', 400));
   // }
-  const { email, password } = req.body;
+  // // 2) Check if user exists && password is correct
+  // const user = await User.findOne({ email: email }).select('+password');
+  // // const correct = await user.correctPassword(password, user.password);
 
-  // 1) Check if email and password exist
-  if (!email || !password) {
-    return next(new AppError('Please provide email and password', 400));
-  }
-  // 2) Check if user exists && password is correct
-  const user = await User.findOne({ email: email }).select('+password');
-  // const correct = await user.correctPassword(password, user.password);
-
-  if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError('Incorrect email or password', 401));
-  }
-  // let newUser = { first:{user.firstName} };
-  // 3) If everything ok, send token to client
-  const message = 'Login Was Successful';
-  createSendToken(user, 200, message, res);
+  // if (!user || !(await user.correctPassword(password, user.password))) {
+  //   return next(new AppError('Incorrect email or password', 401));
+  // }
+  // // let newUser = { first:{user.firstName} };
+  // // 3) If everything ok, send token to client
+  // const message = 'Login Was Successful';
+  // createSendToken(user, 200, message, res);
 });
 
 exports.logout = (req, res) => {
@@ -252,7 +258,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // 3) Update changePasswordAt property for the user
 
   // 4) Log the user in, send JWT
-  const message = 'Your password has being resetted';
+  const message = 'Your password has being Changed';
   createSendToken(user, 200, message, res);
 });
 

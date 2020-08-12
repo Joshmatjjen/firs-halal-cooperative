@@ -123,6 +123,7 @@ exports.getMine = (Model) =>
 exports.approveOne = (Model) =>
   catchAsync(async (req, res, next) => {
     let update, doc;
+    let approve = req.body.approve;
     switch (req.body.executiveType) {
       case 'LCS':
         update = {
@@ -185,11 +186,18 @@ exports.approveOne = (Model) =>
     }
 
     if (!doc) {
-      return next(new AppError('No document found with that ID', 404));
+      return next(
+        new AppError(
+          'An Error Occur While Approving Loan, Please check your internet',
+          404
+        )
+      );
     }
     res.status(200).json({
       status: 'success',
-      message: 'Loan has being approved',
+      message: approve
+        ? 'Loan has being approved'
+        : 'Loan has being disapproved',
       data: {
         data: doc,
       },

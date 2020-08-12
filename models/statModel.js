@@ -18,6 +18,10 @@ const statSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  totalUnconfirmedUsers: {
+    type: Number,
+    default: 0,
+  },
   totalAdmins: {
     type: Number,
     default: 0,
@@ -26,7 +30,11 @@ const statSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  totalLoans: {
+  totalInvestmentExpenses: {
+    type: Number,
+    default: 0,
+  },
+  totalUserLoans: {
     type: Number,
     default: 0,
   },
@@ -46,17 +54,42 @@ const statSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  totalInvestments: {
+    type: Number,
+    default: 0,
+  },
+  totalPendingInvestments: {
+    type: Number,
+    default: 0,
+  },
+  totalApprovedInvestments: {
+    type: Number,
+    default: 0,
+  },
+  totalDisapprovedInvestments: {
+    type: Number,
+    default: 0,
+  },
+  totalActiveInvestments: {
+    type: Number,
+    default: 0,
+  },
   totalMonthlyContribution: {
     type: Number,
     default: 0,
   },
-  totalSavings: {
+  totalUserSavings: {
     type: Number,
     default: 0,
   },
-  totalInvestments: {
+  totalUserInvestments: {
     type: Number,
     default: 0,
+  },
+  secretNo: {
+    type: String,
+    default: 'BI-ZZ007',
+    select: false,
   },
 });
 

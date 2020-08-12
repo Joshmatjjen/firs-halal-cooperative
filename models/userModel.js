@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { cloudinary } = require('../utils/imageUpload');
+const Stat = require('./statModel');
 const AppError = require('../utils/appError');
 
 const userSchema = new mongoose.Schema({
@@ -58,19 +59,45 @@ const userSchema = new mongoose.Schema({
   executive: {
     isLCS: {
       type: Boolean,
-      default: false,
+      // default: false,
+      select: function () {
+        return this.role === 'super-admin' || this.role === 'executive';
+      },
     },
     isLCC: {
       type: Boolean,
-      default: false,
+      // default: false,
+      select: function () {
+        return this.role === 'super-admin' || this.role === 'executive';
+      },
+    },
+    isICS: {
+      type: Boolean,
+      // default: false,
+      select: function () {
+        return this.role === 'super-admin' || this.role === 'executive';
+      },
+    },
+    isICC: {
+      type: Boolean,
+      // default: false,
+      select: function () {
+        return this.role === 'super-admin' || this.role === 'executive';
+      },
     },
     isAuditor: {
       type: Boolean,
-      default: false,
+      // default: false,
+      select: function () {
+        return this.role === 'super-admin' || this.role === 'executive';
+      },
     },
     isPresident: {
       type: Boolean,
-      default: false,
+      // default: false,
+      select: function () {
+        return this.role === 'super-admin' || this.role === 'executive';
+      },
     },
   },
   password: {
@@ -100,35 +127,98 @@ const userSchema = new mongoose.Schema({
   },
   maritalStatus: {
     type: String,
-    required: [this.role === 'user', 'Please tell us your marital status'],
     trim: true,
     type: String,
     lowercase: true,
     enum: ['single', 'married', 'others'],
-    default: 'others',
+    required: [
+      function () {
+        return this.role === 'user';
+      },
+      'Please tell us your marital status',
+    ],
+    select: function () {
+      return this.role === 'user';
+    },
   },
   dob: {
     type: Date,
-    required: [this.role === 'user', 'Please tell us your date of birth'],
+    required: [
+      function () {
+        return this.role === 'user';
+      },
+      'Please tell us your date of birth',
+    ],
+    select: function () {
+      return this.role === 'user';
+    },
   },
   soo: {
     type: String,
     lowercase: true,
-    // required: [
-    //   this.role === 'user' ? true : false,
-    //   'Please tell us your state of origin',
-    // ],
+    required: [
+      function () {
+        return this.role === 'user';
+      },
+      'Please tell us your state of origin',
+    ],
+    select: function () {
+      return this.role === 'user';
+    },
+  },
+  secretCode: {
+    type: String,
+    required: [
+      function () {
+        return this.role !== 'user';
+      },
+      'Please type in the secret code',
+    ],
+    validate: {
+      validator: async function (code) {
+        let stat = await Stat.findOne({ _id: process.env.STATS_ID }).select(
+          '+secretNo'
+        );
+        return code === stat.secretNo;
+      },
+      message: 'Please type in a valid secret code',
+    },
+    select: function () {
+      return this.role !== 'user';
+    },
+  },
+  secretNo: {
+    type: String,
+    select: function () {
+      return this.role === 'super-admin';
+    },
   },
   residentAddress: {
     type: String,
   },
   permanentAddress: {
     type: String,
-    required: [this.role === 'user', 'Please tell us your permanent address'],
+    required: [
+      function () {
+        return this.role === 'user';
+      },
+      'Please tell us your permanent address',
+    ],
+    select: function () {
+      return this.role === 'user';
+    },
   },
   irNo: {
     type: Number,
-    required: [this.role === 'user', 'Please tell us your IR Number'],
+    required: [
+      function () {
+        return this.role === 'user';
+      },
+      'Please tell us your Ir No',
+    ],
+    select: function () {
+      return this.role === 'user';
+    },
   },
   photo: {
     type: String,
@@ -136,30 +226,52 @@ const userSchema = new mongoose.Schema({
   },
   deploymentAddress: {
     type: String,
-    required: [this.role === 'user', 'Please tell us your deployment address'],
+    required: [
+      function () {
+        return this.role === 'user';
+      },
+      'Please tell us your deployment address',
+    ],
+    select: function () {
+      return this.role === 'user';
+    },
   },
   officeAddress: {
     type: String,
   },
   salaryGrade: {
     type: String,
-    required: [this.role === 'user', 'Please tell us your deployment address'],
+    required: [
+      function () {
+        return this.role === 'user';
+      },
+      'Please tell us your deployment address',
+    ],
+    select: function () {
+      return this.role === 'user';
+    },
   },
   confirmed: {
     type: String,
     enum: ['yes', 'no'],
     lowercase: true,
     default: 'no',
-    // required: [true, 'Please tell us if you are confirmed'],
   },
   employmentDate: {
     type: Date,
-    required: [true, 'Please tell us date of your employment'],
+    required: [
+      function () {
+        return this.role === 'user';
+      },
+      'Please tell us date of your employment',
+    ],
+    select: function () {
+      return this.role === 'user';
+    },
   },
   repDetails: {
     firstName: {
       type: String,
-      required: [true, 'Please tell us your representative first name'],
       trim: true,
       lowercase: true,
       maxlength: [
@@ -170,10 +282,18 @@ const userSchema = new mongoose.Schema({
         3,
         'Representative first name must have more or equals to 3 characters',
       ],
+      required: [
+        function () {
+          return this.role === 'user';
+        },
+        'Please tell us your representative first name',
+      ],
+      select: function () {
+        return this.role === 'user';
+      },
     },
     lastName: {
       type: String,
-      required: [true, 'Please tell us your representative last name'],
       trim: true,
       lowercase: true,
       maxlength: [
@@ -184,39 +304,93 @@ const userSchema = new mongoose.Schema({
         3,
         'Representative last name must have more or equals to 3 characters',
       ],
+      required: [
+        function () {
+          return this.role === 'user';
+        },
+        'Please tell us your representative last name',
+      ],
+      select: function () {
+        return this.role === 'user';
+      },
     },
     relationship: {
       type: String,
       required: [
-        true,
+        function () {
+          return this.role === 'user';
+        },
         'Please tell us the between you and your representative',
       ],
+      select: function () {
+        return this.role === 'user';
+      },
     },
     address: {
       type: String,
       required: [
-        true,
+        function () {
+          return this.role === 'user';
+        },
         'Please tell us your representative address (Home or Office)',
       ],
+      select: function () {
+        return this.role === 'user';
+      },
     },
     phoneNumber: {
       type: String,
-      required: [true, 'Please tell us your representative phone number'],
+      required: [
+        function () {
+          return this.role === 'user';
+        },
+        'Please tell us your representative phone number',
+      ],
+      select: function () {
+        return this.role === 'user';
+      },
     },
   },
   contribution: {
     totalMC: {
       type: Number,
-      required: [true, 'Please tell us your total monthly contribution'],
+      required: [
+        function () {
+          return this.role === 'user';
+        },
+        'Please tell us your total monthly contribution',
+      ],
+      select: function () {
+        return this.role === 'user';
+      },
     },
+
     investmentAccount: {
       type: Number,
-      required: [true, 'Please tell us your investment account'],
+      required: [
+        function () {
+          return this.role === 'user';
+        },
+        'Please tell us your investment account',
+      ],
+      select: function () {
+        return this.role === 'user';
+      },
     },
+
     savingsAccount: {
       type: Number,
-      required: [true, 'Please tell us your savings account'],
+      required: [
+        function () {
+          return this.role === 'user';
+        },
+        'Please tell us your savings account',
+      ],
+      select: function () {
+        return this.role === 'user';
+      },
     },
+
     targetAccount: {
       type: Number,
     },
@@ -227,16 +401,43 @@ const userSchema = new mongoose.Schema({
   bankDetails: {
     bankName: {
       type: String,
-      required: [true, 'Please tell us your bank name'],
+      required: [
+        function () {
+          return this.role === 'user';
+        },
+        'Please tell us your bank name',
+      ],
+      select: function () {
+        return this.role === 'user';
+      },
     },
+
     accountName: {
       type: String,
-      required: [true, 'Please tell us your bank account number'],
+      required: [
+        function () {
+          return this.role === 'user';
+        },
+        'Please tell us your bank account number',
+      ],
+      select: function () {
+        return this.role === 'user';
+      },
     },
+
     accountNumber: {
       type: Number,
-      required: [true, 'Please tell us your bank account number'],
+      required: [
+        function () {
+          return this.role === 'user';
+        },
+        'Please tell us your bank account number',
+      ],
+      select: function () {
+        return this.role === 'user';
+      },
     },
+
     sortCode: {
       type: String,
     },
@@ -244,24 +445,44 @@ const userSchema = new mongoose.Schema({
   activeLoan: {
     _id: {
       type: String,
+      select: function () {
+        return this.role === 'user';
+      },
     },
     type: {
       type: String,
+      select: function () {
+        return this.role === 'user';
+      },
     },
     amount: {
       type: Number,
+      select: function () {
+        return this.role === 'user';
+      },
     },
     duration: {
       type: String,
+      select: function () {
+        return this.role === 'user';
+      },
     },
     activatedDate: {
       type: Date,
+      select: function () {
+        return this.role === 'user';
+      },
     },
     expiringDate: {
       type: Date,
+      select: function () {
+        return this.role === 'user';
+      },
     },
   },
 });
+
+userSchema.index({ irNo: 1 }, { unique: true });
 
 userSchema.pre('save', async function (next) {
   // Only run this function if password was actually modified
