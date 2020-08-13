@@ -107,7 +107,26 @@ exports.getAll = (Model) =>
     console.log(docCount);
     let filter = {};
     if (req.query.user) filter = { user: req.query.user };
-    const features = new APIFeatures(Model.find(filter), req.query)
+    const features = new APIFeatures(
+      Model.find(filter)
+        .populate({
+          path: 'approval.onLCS.user',
+          select: 'firstName lastName role photo',
+        })
+        .populate({
+          path: 'approval.onLCC.user',
+          select: 'firstName lastName role photo',
+        })
+        .populate({
+          path: 'approval.onAuditor.user',
+          select: 'firstName lastName role photo',
+        })
+        .populate({
+          path: 'approval.onPresident.user',
+          select: 'firstName lastName role photo',
+        }),
+      req.query
+    )
       .filter()
       .sort()
       .limitFields()
