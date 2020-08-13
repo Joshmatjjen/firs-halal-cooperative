@@ -124,6 +124,10 @@ exports.getAll = (Model) =>
         .populate({
           path: 'approval.onPresident.user',
           select: 'firstName lastName role photo',
+        })
+        .populate({
+          path: 'user',
+          select: 'firstName lastName role photo soo contribution',
         }),
       req.query
     )

@@ -160,11 +160,7 @@ loanSchema.pre(/^find/, function (next) {
   // });
   this.populate({
     path: 'user',
-    select: 'id firstName role',
-  });
-  this.populate({
-    path: 'approval:{onLCS:{user}}',
-    select: 'id firstName role',
+    select: 'id firstName role lastName photo',
   });
   next();
 });
