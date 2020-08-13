@@ -26,12 +26,15 @@ const loanSchema = new mongoose.Schema(
         user: {
           type: mongoose.Schema.ObjectId,
           ref: 'User',
+          default: null,
         },
         isApproved: {
           type: Boolean,
+          default: false,
         },
         comment: {
           type: String,
+          default: '',
         },
         actionDate: {
           type: Date,
@@ -159,7 +162,10 @@ loanSchema.pre(/^find/, function (next) {
     path: 'user',
     select: 'id firstName role',
   });
-
+  this.populate({
+    path: 'approval:{onLCS:{user}}',
+    select: 'id firstName role',
+  });
   next();
 });
 

@@ -42,7 +42,7 @@ exports.getLoan = factory.getOne(Loan);
 
 exports.getMyLoan = factory.getMine(Loan);
 
-exports.createLoan = factory.createOne(Loan);
+exports.createLoan = factory.createOne(Loan, User);
 // exports.createReview = catchAsync(async (req, res, next) => {
 //   // Allow nested route
 //   if (!req.body.tour) req.body.tour = req.params.tourId;

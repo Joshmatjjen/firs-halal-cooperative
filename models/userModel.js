@@ -210,6 +210,9 @@ const userSchema = new mongoose.Schema({
   },
   irNo: {
     type: Number,
+    unique: function () {
+      return this.role === 'user';
+    },
     required: [
       function () {
         return this.role === 'user';
@@ -482,7 +485,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.index({ irNo: 1 }, { unique: true });
+// userSchema.index({ irNo: 1 }, { unique: false });
 
 userSchema.pre('save', async function (next) {
   // Only run this function if password was actually modified

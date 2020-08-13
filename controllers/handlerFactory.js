@@ -33,12 +33,45 @@ exports.updateOne = (Model) =>
     });
   });
 
-exports.createOne = (Model) =>
+exports.createOne = (Model, User) =>
   catchAsync(async (req, res, next) => {
     // const newTour = new Tour({});
     // newTour.save();
-
-    const doc = await Model.create(req.body);
+    let body, doc;
+    if (User) {
+      let lcs = await User.findOne({ executive: { isLCS: true } }).then(
+        (user) => user._id
+      );
+      let lcc = await User.findOne({ executive: { isLCC: true } }).then(
+        (user) => user._id
+      );
+      let auditor = await User.findOne({ executive: { isAuditor: true } }).then(
+        (user) => user._id
+      );
+      let president = await User.findOne({
+        executive: { isPresident: true },
+      }).then((user) => user._id);
+      body = {
+        ...req.body,
+        approval: {
+          onLCS: {
+            user: lcs,
+          },
+          onLCC: {
+            user: lcc,
+          },
+          onAuditor: {
+            user: auditor,
+          },
+          onPresident: {
+            user: president,
+          },
+        },
+      };
+      doc = await Model.create(body);
+    } else {
+      doc = await Model.create(req.body);
+    }
 
     res.status(201).json({
       status: 'success',
