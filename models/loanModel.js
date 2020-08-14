@@ -30,7 +30,7 @@ const loanSchema = new mongoose.Schema(
         },
         isApproved: {
           type: Boolean,
-          default: false,
+          default: null,
         },
         comment: {
           type: String,
@@ -48,7 +48,7 @@ const loanSchema = new mongoose.Schema(
         },
         isApproved: {
           type: Boolean,
-          default: false,
+          default: null,
         },
         comment: {
           type: String,
@@ -66,7 +66,7 @@ const loanSchema = new mongoose.Schema(
         },
         isApproved: {
           type: Boolean,
-          default: false,
+          default: null,
         },
         comment: {
           type: String,
@@ -84,7 +84,7 @@ const loanSchema = new mongoose.Schema(
         },
         isApproved: {
           type: Boolean,
-          default: false,
+          default: null,
         },
         comment: {
           type: String,

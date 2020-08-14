@@ -183,50 +183,34 @@ exports.approveOne = (Model) =>
     switch (req.body.executiveType) {
       case 'LCS':
         update = {
-          approval: {
-            onLCS: {
-              user: req.body.userId,
-              isApproved: req.body.approve,
-              comment: req.body.comment,
-              actionDate: Date.now(),
-            },
-          },
+          'approval.onLCS.user': req.body.userId,
+          'approval.onLCS.isApproved': req.body.approve,
+          'approval.onLCS.comment': req.body.comment,
+          'approval.onLCS.actionDate': Date.now(),
         };
         break;
       case 'LCC':
         update = {
-          approval: {
-            onLCC: {
-              user: req.body.userId,
-              isApproved: req.body.approve,
-              comment: req.body.comment,
-              actionDate: Date.now(),
-            },
-          },
+          'approval.onLCC.user': req.body.userId,
+          'approval.onLCC.isApproved': req.body.approve,
+          'approval.onLCC.comment': req.body.comment,
+          'approval.onLCC.actionDate': Date.now(),
         };
         break;
       case 'Auditor':
         update = {
-          approval: {
-            onAuditor: {
-              user: req.body.userId,
-              isApproved: req.body.approve,
-              comment: req.body.comment,
-              actionDate: Date.now(),
-            },
-          },
+          'approval.onAuditor.user': req.body.userId,
+          'approval.onAuditor.isApproved': req.body.approve,
+          'approval.onAuditor.comment': req.body.comment,
+          'approval.onAuditor.actionDate': Date.now(),
         };
         break;
       case 'President':
         update = {
-          approval: {
-            onPresident: {
-              user: req.body.userId,
-              isApproved: req.body.approve,
-              comment: req.body.comment,
-              actionDate: Date.now(),
-            },
-          },
+          'approval.onPresident.user': req.body.userId,
+          'approval.onPresident.isApproved': req.body.approve,
+          'approval.onPresident.comment': req.body.comment,
+          'approval.onPresident.actionDate': Date.now(),
           status: 'approved',
           seenAt: Date.now(),
         };
@@ -239,6 +223,10 @@ exports.approveOne = (Model) =>
         new: true,
         runValidators: true,
       });
+      // doc = await Model.update(
+      //   { _id: req.params.id },
+      //   { 'approval.onLCS.comment': req.body.comment }
+      // ).exec();
     }
 
     if (!doc) {

@@ -1,6 +1,6 @@
-const express = require("express");
-const loanController = require("../controllers/loanController");
-const authController = require("../controllers/authController");
+const express = require('express');
+const loanController = require('../controllers/loanController');
+const authController = require('../controllers/authController');
 
 const loanRouter = express.Router({ mergeParams: true });
 
@@ -8,8 +8,8 @@ const loanRouter = express.Router({ mergeParams: true });
 loanRouter.use(authController.protect);
 // After this 👆  MIDDLEWARE  👇 Users must be authenticated. Route will be protected
 
-loanRouter.route("/").get(loanController.getAllLoans).post(
-  authController.restrictTo("user", "admin"),
+loanRouter.route('/').get(loanController.getAllLoans).post(
+  authController.restrictTo('user', 'admin'),
   // If using factory function
   //  START
   loanController.setUserIds,
@@ -19,29 +19,29 @@ loanRouter.route("/").get(loanController.getAllLoans).post(
 );
 
 loanRouter
-  .route("/:id")
+  .route('/:id')
   .get(loanController.getLoan)
-  .patch(authController.restrictTo("user", "admin"), loanController.updateLoan)
+  .patch(authController.restrictTo('user', 'admin'), loanController.updateLoan)
   .delete(
-    authController.restrictTo("user", "admin"),
+    authController.restrictTo('user', 'admin'),
     loanController.deleteLoan
   );
 
 loanRouter
-  .route("/me/:userId")
+  .route('/me/:userId')
   .get(loanController.getMyLoan)
-  .patch(authController.restrictTo("user", "admin"), loanController.updateLoan)
+  .patch(authController.restrictTo('user', 'admin'), loanController.updateLoan)
   .delete(
-    authController.restrictTo("user", "admin"),
+    authController.restrictTo('user', 'admin'),
     loanController.deleteLoan
   );
 
 loanRouter
-  .route("/approve/:id")
-  .patch(authController.restrictTo("admin"), loanController.approveLoan);
+  .route('/approve/:id')
+  .patch(authController.restrictTo('executive'), loanController.approveLoan);
 
 loanRouter
-  .route("/disapprove/:id")
-  .patch(authController.restrictTo("admin"), loanController.disapproveLoan);
+  .route('/disapprove/:id')
+  .patch(authController.restrictTo('admin'), loanController.disapproveLoan);
 
 module.exports = loanRouter;
