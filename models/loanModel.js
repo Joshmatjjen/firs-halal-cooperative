@@ -140,6 +140,10 @@ const loanSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    expiresAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -158,6 +162,7 @@ loanSchema.pre(/^find/, function (next) {
   //   path: 'user',
   //   select: 'name photo'
   // });
+  // console.log(this.status);
   this.populate({
     path: 'user',
     select: 'id firstName role lastName photo',
@@ -166,6 +171,7 @@ loanSchema.pre(/^find/, function (next) {
 });
 
 loanSchema.pre('save', async function (next) {
+  console.log('hello');
   // Only run this function if duration was actually modified
   if (!this.isModified('duration')) return next();
 
@@ -177,6 +183,19 @@ loanSchema.pre('save', async function (next) {
   perMonthRefunds = amount / duration;
 
   this.perMonthRefund = Math.round(perMonthRefunds);
+
+  next();
+});
+
+loanSchema.pre('save', async function (next) {
+  // Only run this function if duration was actually modified
+  if (!this.isModified('status')) return next();
+
+  // Implementing Refund Per Month
+  // console.log(thus.status);
+  if (this.status === 'approved') {
+    console.log(this.status);
+  }
 
   next();
 });

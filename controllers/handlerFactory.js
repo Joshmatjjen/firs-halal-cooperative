@@ -85,6 +85,27 @@ exports.getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
     if (popOptions) query = query.populate(popOptions);
+    query
+      .populate({
+        path: 'approval.onLCS.user',
+        select: 'firstName lastName role photo',
+      })
+      .populate({
+        path: 'approval.onLCC.user',
+        select: 'firstName lastName role photo',
+      })
+      .populate({
+        path: 'approval.onAuditor.user',
+        select: 'firstName lastName role photo',
+      })
+      .populate({
+        path: 'approval.onPresident.user',
+        select: 'firstName lastName role photo',
+      })
+      .populate({
+        path: 'user',
+        select: 'firstName lastName role photo soo contribution',
+      });
     const doc = await query;
 
     if (!doc) {
@@ -176,10 +197,15 @@ exports.getMine = (Model) =>
     });
   });
 
-exports.approveOne = (Model) =>
+exports.approveOne = (Model, User) =>
   catchAsync(async (req, res, next) => {
     let update, doc;
     let approve = req.body.approve;
+    const expid = (dur, approvedDate) => {
+      // var d = new Date(Date.now());
+      approvedDate.setMonth(approvedDate.getMonth() + dur);
+      return new Date(approvedDate);
+    };
     switch (req.body.executiveType) {
       case 'LCS':
         update = {
@@ -222,11 +248,42 @@ exports.approveOne = (Model) =>
       doc = await Model.findByIdAndUpdate(req.params.id, update, {
         new: true,
         runValidators: true,
-      });
+      })
+        .populate({
+          path: 'approval.onLCS.user',
+          select: 'firstName lastName role photo',
+        })
+        .populate({
+          path: 'approval.onLCC.user',
+          select: 'firstName lastName role photo',
+        })
+        .populate({
+          path: 'approval.onAuditor.user',
+          select: 'firstName lastName role photo',
+        })
+        .populate({
+          path: 'approval.onPresident.user',
+          select: 'firstName lastName role photo',
+        });
       // doc = await Model.update(
       //   { _id: req.params.id },
       //   { 'approval.onLCS.comment': req.body.comment }
       // ).exec();
+      if (doc.status === 'approved') {
+        let loan = await Model.findByIdAndUpdate(req.params.id, {
+          expiresAt: expid(doc.duration, doc.seenAt),
+        });
+        if (User) {
+          await User.findByIdAndUpdate(doc.user.id, {
+            'activeLoan._id': doc.id,
+            'activeLoan.type': doc.type,
+            'activeLoan.amount': doc.amount,
+            'activeLoan.duration': doc.duration,
+            'activeLoan.activatedDate': doc.seenAt,
+            'activeLoan.expiringDate': loan.expiresAt,
+          });
+        }
+      }
     }
 
     if (!doc) {
