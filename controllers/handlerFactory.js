@@ -35,50 +35,71 @@ exports.updateOne = (Model) =>
 
 exports.createOne = (Model, User) =>
   catchAsync(async (req, res, next) => {
-    // const newTour = new Tour({});
-    // newTour.save();
     let body, doc;
-    if (User) {
-      let lcs = await User.findOne({ executive: { isLCS: true } }).then(
-        (user) => user._id
-      );
-      let lcc = await User.findOne({ executive: { isLCC: true } }).then(
-        (user) => user._id
-      );
-      let auditor = await User.findOne({ executive: { isAuditor: true } }).then(
-        (user) => user._id
-      );
-      let president = await User.findOne({
-        executive: { isPresident: true },
-      }).then((user) => user._id);
-      body = {
-        ...req.body,
-        approval: {
-          onLCS: {
-            user: lcs,
-          },
-          onLCC: {
-            user: lcc,
-          },
-          onAuditor: {
-            user: auditor,
-          },
-          onPresident: {
-            user: president,
-          },
-        },
-      };
-      doc = await Model.create(body);
-    } else {
-      doc = await Model.create(req.body);
-    }
+    let filter = { user: req.body.user, status: 'pending' };
+    const currentUser = new APIFeatures(
+      User.find({ _id: req.body.user }),
+      req.query
+    );
+    const myProfile = await currentUser.query;
+    if ((myProfile[0].activeLoan = {} || myProfile[0].activeLoan === null)) {
+      const loanUser = new APIFeatures(Model.find(filter), req.query);
+      const pendingUser = await loanUser.query;
+      console.log(pendingUser.length);
+      if (pendingUser.length >= 1) {
+        console.log('no loan');
+        return next(
+          new AppError(
+            'You already have a pending loan which have not being reviewed by the executive',
+            404
+          )
+        );
+      } else {
+        if (User) {
+          let lcs = await User.findOne({ executive: { isLCS: true } }).then(
+            (user) => user._id
+          );
+          let lcc = await User.findOne({ executive: { isLCC: true } }).then(
+            (user) => user._id
+          );
+          let auditor = await User.findOne({
+            executive: { isAuditor: true },
+          }).then((user) => user._id);
+          let president = await User.findOne({
+            executive: { isPresident: true },
+          }).then((user) => user._id);
+          body = {
+            ...req.body,
+            approval: {
+              onLCS: {
+                user: lcs,
+              },
+              onLCC: {
+                user: lcc,
+              },
+              onAuditor: {
+                user: auditor,
+              },
+              onPresident: {
+                user: president,
+              },
+            },
+          };
+          doc = await Model.create(body);
+        } else {
+          doc = await Model.create(req.body);
+        }
 
-    res.status(201).json({
-      status: 'success',
-      data: {
-        data: doc,
-      },
-    });
+        res.status(201).json({
+          status: 'success',
+          data: {
+            data: doc,
+          },
+        });
+      }
+    } else {
+      return next(new AppError('You already have an active loan', 404));
+    }
   });
 
 exports.getOne = (Model, popOptions) =>
@@ -278,8 +299,9 @@ exports.approveOne = (Model, User) =>
             'activeLoan._id': doc.id,
             'activeLoan.type': doc.type,
             'activeLoan.amount': doc.amount,
+            'activeLoan.monthlyRefund': doc.perMonthRefund,
             'activeLoan.duration': doc.duration,
-            'activeLoan.activatedDate': doc.seenAt,
+            'activeLoan.activatedDate': Date.now(),
             'activeLoan.expiringDate': loan.expiresAt,
           });
         }

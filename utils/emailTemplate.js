@@ -550,7 +550,7 @@ function emailTemplate(firstName, lastName, dashboardLink) {
                                 <td align="center" style="padding:0;Margin:0;padding-top:15px;padding-bottom:15px">
                                   <h1
                                     style="Margin:0;line-height:22px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:18px;font-style:normal;font-weight:normal;color:#333333">
-                                    <b>Welcome to FIRS-HILAL Cooperative Society</b></h1>
+                                    <b>Welcome to FIRS-HALAL Cooperative Society</b></h1>
                                 </td>
                               </tr>
                               <tr style="border-collapse:collapse">

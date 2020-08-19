@@ -464,6 +464,12 @@ const userSchema = new mongoose.Schema({
         return this.role === 'user';
       },
     },
+    monthlyRefund: {
+      type: Number,
+      select: function () {
+        return this.role === 'user';
+      },
+    },
     duration: {
       type: String,
       select: function () {
