@@ -1,6 +1,7 @@
 // review / rating / createdAt / ref to tour / ref to user
 const mongoose = require('mongoose');
 const User = require('./userModel');
+const { cloudinary } = require('../utils/imageUpload');
 
 const loanSchema = new mongoose.Schema(
   {
@@ -113,7 +114,6 @@ const loanSchema = new mongoose.Schema(
         },
         message: 'You have reached your Maximum Amount limit',
       },
-      // maxlength: this.amount,
     },
     duration: {
       type: Number,
@@ -127,6 +127,10 @@ const loanSchema = new mongoose.Schema(
         message: 'You have reached your Maximum Duration limit',
       },
       required: [true, 'Duration can not be empty!'],
+    },
+    receipt: {
+      type: String,
+      required: [true, 'Add a receipt or evidence of payment'],
     },
     perMonthRefund: {
       type: Number,
@@ -197,6 +201,21 @@ loanSchema.pre('save', async function (next) {
     console.log(this.status);
   }
 
+  next();
+});
+
+loanSchema.pre('save' || /^find/, async function (next) {
+  // Only run this function if photo was actually modified
+  let result;
+  try {
+    !this.isModified('receipt') ? next() : null;
+    result = await cloudinary.uploader.upload(this.receipt, {
+      upload_preset: 'firs-halal',
+    });
+    result ? (this.receipt = result.public_id) : null;
+  } catch (err) {
+    console.error(err);
+  }
   next();
 });
 
