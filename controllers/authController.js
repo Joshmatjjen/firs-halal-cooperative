@@ -92,7 +92,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (user && !user.active) {
     return next(
       new AppError(
-        'Sorry Your Account Have Being Ban or Deactivated. If You Are Not Guilty, Please Contact Us',
+        'Sorry Your Account Have Being Ban or Deactivated. If You Are Not Guilty, Please Contact The Cooperative Administration',
         401
       )
     );
