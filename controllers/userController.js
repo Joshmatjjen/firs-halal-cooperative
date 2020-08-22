@@ -4,7 +4,7 @@ const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 const { cloudinary } = require('../utils/imageUpload');
 
-exports.getAllUsers = factory.getAll(User);
+exports.getAllUsers = factory.getAll(User, (Type = 'user'));
 // exports.getAllUsers = catchAsync(async (req, res, next) => {
 //   const users = await User.find();
 

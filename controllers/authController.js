@@ -84,10 +84,18 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Please provide email and password', 400));
   }
   // 2) Check if user exists && password is correct
-  const user = await User.findOne({ email: email }).select('+password');
+  let user = await User.findOne({ email: email }).select('+password +active');
   // const correct = await user.correctPassword(password, user.password);
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
+  }
+  if (user && !user.active) {
+    return next(
+      new AppError(
+        'Sorry Your Account Have Being Ban or Deactivated. If You Are Not Guilty, Please Contact Us',
+        401
+      )
+    );
   }
   // let newUser = { first:{user.firstName} };
   // 3) If everything ok, send token to client

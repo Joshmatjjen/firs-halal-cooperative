@@ -20,7 +20,7 @@ exports.updateOne = (Model) =>
     const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
-    });
+    }).select('+active');
 
     if (!doc) {
       return next(new AppError('No document found with that ID', 404));
@@ -107,6 +107,7 @@ exports.getOne = (Model, popOptions) =>
     let query = Model.findById(req.params.id);
     if (popOptions) query = query.populate(popOptions);
     query
+      .select('+active')
       .populate({
         path: 'approval.onLCS.user',
         select: 'firstName lastName role photo',
@@ -141,16 +142,19 @@ exports.getOne = (Model, popOptions) =>
     });
   });
 
-exports.getAll = (Model) =>
+exports.getAll = (Model, Type) =>
   catchAsync(async (req, res, next) => {
     // EXECUTE QUERY
     // To allow for nested GET reviews on tour (hack)
+    console.log(Type);
     const docCount = await Model.countDocuments({ role: 'user' }).exec();
     console.log(docCount);
     let filter = {};
     if (req.query.user) filter = { user: req.query.user };
+    // if (Type === 'user') filter = { role: `` };
     const features = new APIFeatures(
       Model.find(filter)
+        .select('+active')
         .populate({
           path: 'approval.onLCS.user',
           select: 'firstName lastName role photo',
@@ -178,7 +182,11 @@ exports.getAll = (Model) =>
       .limitFields()
       .paginate();
     // const doc = await features.query.explain();
-    const doc = await features.query;
+    let doc = await features.query;
+    if (Type === 'user')
+      doc = await doc.filter(
+        (user) => user.role === 'user' || user.role === 'admin'
+      );
 
     // SEND RESPONSE
 
