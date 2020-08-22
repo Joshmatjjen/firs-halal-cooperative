@@ -31,7 +31,7 @@ userRouter.patch('/updateMe', userController.updateMe);
 userRouter.delete('/deleteMe', userController.deleteMe);
 
 // RestricTo Admin Only MIDDLEWARE 👇
-userRouter.use(authController.restrictTo('super-admin', 'admin'));
+userRouter.use(authController.restrictTo('super-admin', 'admin', 'executive'));
 // After this 👆  MIDDLEWARE  👇 Only Admin can go to route
 
 userRouter

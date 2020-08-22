@@ -185,7 +185,8 @@ exports.getAll = (Model, Type) =>
     let doc = await features.query;
     if (Type === 'user')
       doc = await doc.filter(
-        (user) => user.role === 'user' || user.role === 'admin'
+        (user) => user.role === 'user'
+        // || user.role === 'admin'
       );
 
     // SEND RESPONSE
