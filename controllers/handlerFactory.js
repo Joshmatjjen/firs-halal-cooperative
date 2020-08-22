@@ -144,50 +144,57 @@ exports.getOne = (Model, popOptions) =>
 
 exports.getAll = (Model, Type) =>
   catchAsync(async (req, res, next) => {
+    let features;
     // EXECUTE QUERY
     // To allow for nested GET reviews on tour (hack)
-    console.log(Type);
     const docCount = await Model.countDocuments({ role: 'user' }).exec();
     console.log(docCount);
     let filter = {};
     if (req.query.user) filter = { user: req.query.user };
+    if (Type === 'user') filter = { role: 'user' };
     // if (Type === 'user') filter = { role: `` };
-    const features = new APIFeatures(
-      Model.find(filter)
-        .select('+active')
-        .populate({
-          path: 'approval.onLCS.user',
-          select: 'firstName lastName role photo',
-        })
-        .populate({
-          path: 'approval.onLCC.user',
-          select: 'firstName lastName role photo',
-        })
-        .populate({
-          path: 'approval.onAuditor.user',
-          select: 'firstName lastName role photo',
-        })
-        .populate({
-          path: 'approval.onPresident.user',
-          select: 'firstName lastName role photo',
-        })
-        .populate({
-          path: 'user',
-          select: 'firstName lastName role photo soo contribution',
-        }),
-      req.query
-    )
-      .filter()
-      .sort()
-      .limitFields()
-      .paginate();
+    if (Type === 'user') {
+      features = new APIFeatures(
+        Model.find(filter).select('+active'),
+        req.query
+      );
+    } else {
+      features = new APIFeatures(
+        Model.find(filter)
+          .populate({
+            path: 'approval.onLCS.user',
+            select: 'firstName lastName role photo',
+          })
+          .populate({
+            path: 'approval.onLCC.user',
+            select: 'firstName lastName role photo',
+          })
+          .populate({
+            path: 'approval.onAuditor.user',
+            select: 'firstName lastName role photo',
+          })
+          .populate({
+            path: 'approval.onPresident.user',
+            select: 'firstName lastName role photo',
+          })
+          .populate({
+            path: 'user',
+            select: 'firstName lastName role photo soo contribution',
+          }),
+        req.query
+      )
+        .filter()
+        .sort()
+        .limitFields()
+        .paginate();
+    }
     // const doc = await features.query.explain();
     let doc = await features.query;
-    if (Type === 'user')
-      doc = await doc.filter(
-        (user) => user.role === 'user'
-        // || user.role === 'admin'
-      );
+    // if (Type === 'user')
+    //   doc = await doc.filter(
+    //     (user) => user.role === 'user'
+    //     // || user.role === 'admin'
+    //   );
 
     // SEND RESPONSE
 
