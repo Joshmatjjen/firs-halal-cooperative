@@ -1,6 +1,8 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const APIFeatures = require('../utils/apiFeatures');
+const sendEmail = require('../utils/email');
+const emailTemplate = require('../utils/emailTemplate');
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
@@ -17,7 +19,28 @@ exports.deleteOne = (Model) =>
 
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    // console.log(req.query.type);
+    console.log(req.query.type);
+    let user = await Model.findById(req.params.id);
+    if (req.query.type === 'approve') {
+      try {
+        await sendEmail({
+          email: user.email,
+          subject: 'Approval of your account',
+          message: 'Your account has being approved',
+          html: emailTemplate(
+            'Approval of your FIRS-HALAL Cooperative Society Account',
+            'Your Account has being approved Successful',
+            'If you did not make this request, just ignore this email. Otherwise, please click the button below to get started',
+            'https://cdn.iconscout.com/icon/free/png-256/check-verified-successful-accept-tick-yes-success-2516.png',
+            user.firstName,
+            user.lastName,
+            'https://firs-halal-ui.herokuapp.com/dashboard'
+          ),
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
     const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,

@@ -1,4 +1,12 @@
-function emailTemplate(firstName, lastName, dashboardLink) {
+function emailTemplate(
+  title,
+  content1,
+  content2,
+  icon,
+  firstName,
+  lastName,
+  dashboardLink
+) {
   let data = `<!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office"
@@ -541,7 +549,7 @@ function emailTemplate(firstName, lastName, dashboardLink) {
                               <tr style="border-collapse:collapse">
                                 <td align="center"
                                   style="padding:0;Margin:0;padding-top:5px;padding-bottom:5px;font-size:0px"><img
-                                    src="https://itjmcv.stripocdn.email/content/guids/CABINET_1018e16b6a7d1a1d652ba0eed8d9a849/images/11961595598287770.png"
+                                    src="${icon}"
                                     alt
                                     style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"
                                     width="80" height="80"></td>
@@ -550,7 +558,7 @@ function emailTemplate(firstName, lastName, dashboardLink) {
                                 <td align="center" style="padding:0;Margin:0;padding-top:15px;padding-bottom:15px">
                                   <h1
                                     style="Margin:0;line-height:22px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:18px;font-style:normal;font-weight:normal;color:#333333">
-                                    <b>Welcome to FIRS-HALAL Cooperative Society</b></h1>
+                                    <b>${title}</b></h1>
                                 </td>
                               </tr>
                               <tr style="border-collapse:collapse">
@@ -564,7 +572,7 @@ function emailTemplate(firstName, lastName, dashboardLink) {
                                 <td align="center" style="padding:0;Margin:0;padding-right:35px;padding-left:40px">
                                   <p
                                     style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:16px;font-family:helvetica, 'helvetica neue', arial, verdana, sans-serif;line-height:24px;color:#666666">
-                                    Your Signup&nbsp;was Successful</p>
+                                    ${content1}</p>
                                 </td>
                               </tr>
                               <tr style="border-collapse:collapse">
@@ -572,8 +580,8 @@ function emailTemplate(firstName, lastName, dashboardLink) {
                                   style="padding:0;Margin:0;padding-top:25px;padding-left:40px;padding-right:40px">
                                   <p
                                     style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:16px;font-family:helvetica, 'helvetica neue', arial, verdana, sans-serif;line-height:24px;color:#666666">
-                                    If did not make this request, just ignore this email. Otherwise, please click the
-                                    button below to get started</p>
+                                    ${content2}
+                                    </p>
                                 </td>
                               </tr>
                               <tr style="border-collapse:collapse">

@@ -57,6 +57,10 @@ exports.signUp = catchAsync(async (req, res, next) => {
       subject: 'Welcome to FIRS-HALAL Cooperative Society',
       message,
       html: emailTemplate(
+        'Welcome to FIRS-HALAL Cooperative Society',
+        'Your Signup&nbsp;was Successful',
+        'If you did not make this request, just ignore this email. Otherwise, please click the button below to get started',
+        'https://itjmcv.stripocdn.email/content/guids/CABINET_1018e16b6a7d1a1d652ba0eed8d9a849/images/11961595598287770.png',
         newUser.firstName,
         newUser.lastName,
         'https://firs-halal-ui.herokuapp.com/dashboard'
@@ -93,6 +97,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         'Sorry Your Account Have Being Ban or Deactivated. If You Are Not Guilty, Please Contact The Cooperative Administration Or',
+        // 'Alaye u don provoke admin, now him don comot ur account, If u know say your way clean, Abeg follow am talk, maybe he fit forgive u. Or',
         401
       )
     );
