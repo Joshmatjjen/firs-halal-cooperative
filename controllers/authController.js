@@ -59,7 +59,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
       html: emailTemplate(
         newUser.firstName,
         newUser.lastName,
-        'https://www.google.com/'
+        'https://firs-halal-ui.herokuapp.com/dashboard'
       ),
     });
   } catch (err) {
