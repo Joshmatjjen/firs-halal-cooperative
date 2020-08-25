@@ -489,6 +489,50 @@ const userSchema = new mongoose.Schema({
       },
     },
   },
+  activeInvest: {
+    _id: {
+      type: String,
+      select: function () {
+        return this.role === 'user';
+      },
+    },
+    type: {
+      type: String,
+      select: function () {
+        return this.role === 'user';
+      },
+    },
+    amount: {
+      type: Number,
+      select: function () {
+        return this.role === 'user';
+      },
+    },
+    monthlyRefund: {
+      type: Number,
+      select: function () {
+        return this.role === 'user';
+      },
+    },
+    duration: {
+      type: String,
+      select: function () {
+        return this.role === 'user';
+      },
+    },
+    activatedDate: {
+      type: Date,
+      select: function () {
+        return this.role === 'user';
+      },
+    },
+    expiringDate: {
+      type: Date,
+      select: function () {
+        return this.role === 'user';
+      },
+    },
+  },
 });
 
 // userSchema.index({ irNo: 1 }, { unique: false });
